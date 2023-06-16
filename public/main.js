@@ -3,7 +3,7 @@ const createPage = async () => {
   try {
     const response = await fetch("https://encounter-gen.onrender.com/party");
     const charArr = response.value.json();
-    console.log(charArr);
+    console.log(response);
   } catch (err) {
     console.error(err);
   }
