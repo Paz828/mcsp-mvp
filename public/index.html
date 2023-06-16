@@ -9,19 +9,53 @@
   <body>
     <h1>Test Text</h1>
     <br />
-    <form method="post">
-      <div id="input-container">
-        <button id="switch">switch</button>
-        <input id="col-1-input" type="text" value="Character Level" />
-        <input id="col-2-input" type="text" value="Character Name" />
-        <input id="col-3-input" type="text" value="Character Class" />
-        <input id="col-4-input" type="text" value="Can Cast Spells?" />
-        <button id="post-btn">submit</button>
-      </div>
-    </form>
+    <div id="post-container">
+      <button id="switch">switch</button>
+      <form id="post-form" method="post">
+        <div id="input-container">
+          <input id="col-1-input" type="text" value="Character Level" />
+          <input id="col-2-input" type="text" value="Character Name" />
+          <input id="col-3-input" type="text" value="Character Class" />
+          <input id="col-4-input" type="text" value="Character Ancestry" />
+          <input id="post-btn" type="submit" value="submit" />
+        </div>
+      </form>
+    </div>
     <div id="table_container">
-      <div id="party-table">party</div>
-      <div id="creature-table">creature</div>
+      <div id="party-container">
+        <table id="party-table">
+          <thead>
+            <tr>
+              <th colspan="4">Party</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="char-lvl">Lvl</td>
+              <td id="char-name">Name</td>
+              <td id="char-class">Class</td>
+              <td id="char-ancestry">Ancestry</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="creature-container">
+        <table id="creature-table">
+          <thead>
+            <tr>
+              <th colspan="4">Creature</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="creature-lvl">Lvl</td>
+              <td id="creature-name">Name</td>
+              <td id="creature-link">URL</td>
+              <td id="creature-home">Plane</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
     <div id="encounter-rngsus">
       <input id="rngsus-input" type="text" value="Threat Level" />

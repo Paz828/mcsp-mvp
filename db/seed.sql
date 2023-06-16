@@ -1,12 +1,14 @@
 DROP TABLE IF EXISTS party;
 DROP TABLE IF EXISTS creatures;
 
+Access-Control-Allow-Origin= *
+
 CREATE TABLE party(
     char_id SERIAL PRIMARY KEY,
     char_lvl INT,
     char_name VARCHAR (50),
     char_class VARCHAR (50),
-    cast_spells BOOLEAN DEFAULT false
+    char_ancestry VARCHAR (50)
 );
 
 CREATE TABLE creatures(
@@ -18,10 +20,10 @@ CREATE TABLE creatures(
 );
 
 INSERT INTO party
-    (char_lvl, char_name, char_class, cast_spells)
+    (char_lvl, char_name, char_class, char_ancestry)
 VALUES
-    (7, 'Elara', 'Wizard', true),
-    (5, 'Roland', 'Fighter', false);
+    (7, 'Elara', 'Wizard', 'Elf'),
+    (5, 'Roland', 'Fighter', 'Dwarf');
 
 INSERT INTO creatures
     (creature_lvl, creature_name, creature_url, creature_plane)
