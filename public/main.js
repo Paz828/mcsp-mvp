@@ -2,7 +2,8 @@ const createPage = async () => {
   const partyTable = document.querySelector("#party-table");
   try {
     const response = await fetch("https://encounter-gen.onrender.com/party");
-    console.log(response.json());
+    const charArr = response.value.json();
+    console.log(charArr);
   } catch (err) {
     console.error(err);
   }
