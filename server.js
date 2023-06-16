@@ -40,6 +40,24 @@ app.get("/party/:id", async (req, res) => {
   }
 });
 
+//CREATE one
+app.post("/party", async (req, res) => {
+  const { char_lvl, char_name, char_class, cast_spells } = req.body;
+
+  try {
+    const result = await pool.query(
+      "INSERT INTO party (char_lvl, char_name, char_class, cast_spells) VALUES ($1, $2, $3, $4) RETURNING *",
+      [char_lvl, char_name, char_class, cast_spells]
+    );
+    res.status(201).send(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.send("Internal Server Error").status(500);
+  }
+});
+
+//DELETE one
+
 // creatures table enpoints
 
 app.listen(PORT, () => {
