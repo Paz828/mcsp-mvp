@@ -45,14 +45,14 @@ app.get("/party/:id", async (req, res) => {
 
 //CREATE one
 app.post("/party", async (req, res) => {
-  const { char_lvl, char_name, char_class, cast_spells } = req.body;
+  const { char_lvl, char_name, char_class, char_ancestry } = req.body;
 
   try {
     const result = await pool.query(
-      "INSERT INTO party (char_lvl, char_name, char_class, cast_spells) VALUES ($1, $2, $3, $4) RETURNING *",
-      [char_lvl, char_name, char_class, cast_spells]
+      "INSERT INTO party (char_lvl, char_name, char_class, char_ancestry) VALUES ($1, $2, $3, $4) RETURNING *",
+      [char_lvl, char_name, char_class, char_ancestry]
     );
-    res.status(201).send(result.rows);
+    res.status(201).send(result.rows[0]);
   } catch (err) {
     console.error(err);
     res.send("Internal Server Error").status(500);

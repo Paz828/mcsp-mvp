@@ -6,8 +6,8 @@ const createPage = async () => {
     const partyResponse = await fetch(
       "https://encounter-gen.onrender.com/party"
     );
-    console.log(partyResponse);
     const partyData = await partyResponse.json();
+    console.log(partyData);
     partyData.forEach((elem) => {
       attachToCol(elem["char_lvl"], "#char-lvl", elem["char_id"]);
       attachToCol(elem["char_name"], "#char-name", elem["char_id"]);
@@ -22,23 +22,24 @@ const createPage = async () => {
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // Submit button handler
-const addListeners = async () => {
-  const postForm = document.querySelector("#post-btn");
-  postForm.addEventListener("submit", async (data) => {
-    const response = await fetch("https://encounter-gen.onrender.com/party", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    const postData = await response.json();
-    createPage();
-    console.log(postData);
-  });
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-  // Switch button handler
-};
+// const addListeners = async () => {
+//   const postForm = document.querySelector("#post-btn");
+//   postForm.addEventListener("click", (data) => {
+//     console.log("here");
+//     // const response = await fetch("https://encounter-gen.onrender.com/party", {
+//     //   method: "post",
+//     //   headers: {
+//     //     "Content-Type": "application/json",
+//     //   },
+//     //   body: JSON.stringify(data),
+//     // });
+//     // const postData = await response.json();
+//     // console.log(postData);
+//     createPage();
+//   });
+/////////////////////////////////////////////////////////////////////////////////////////////////
+// Switch button handler
+// };
 const attachToCol = (val, locStr, cls) => {
   const loc = document.querySelector(locStr);
   const div = document.createElement("div");
@@ -48,3 +49,4 @@ const attachToCol = (val, locStr, cls) => {
 };
 
 createPage();
+addListeners();
