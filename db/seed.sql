@@ -1,8 +1,6 @@
 DROP TABLE IF EXISTS party;
 DROP TABLE IF EXISTS creatures;
 
-Access-Control-Allow-Origin= *
-
 CREATE TABLE party(
     char_id SERIAL PRIMARY KEY,
     char_lvl INT,
