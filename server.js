@@ -14,7 +14,7 @@ const pool = new Pool({
 app.use(cors());
 app.use(express.static("public"));
 app.use(express.json());
-
+///////////////////////////////////////////////////////////////////////////////////////////////
 // party table endpoints
 
 // GET All
@@ -60,7 +60,23 @@ app.post("/party", async (req, res) => {
 });
 
 //DELETE one
+app.delete("/party/:id", async (req, res) => {
+  const { id } = req.params;
 
+  try {
+    const result = await pool.query(
+      "DELETE FROM party WHERE char_id = $1 RETURNING *",
+      [id]
+    );
+    res.status(200).json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.send("Internal Server Error").status(500);
+  }
+});
+//UPDATE one
+
+///////////////////////////////////////////////////////////////////////////////////////////////
 // creatures table enpoints
 
 app.listen(PORT, () => {
