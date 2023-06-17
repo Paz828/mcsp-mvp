@@ -17,7 +17,7 @@ const createPage = async () => {
       attachToCol(elem["char_class"], "#char-class", elem["char_id"]);
       attachToCol(elem["char_ancestry"], "#char-ancestry", elem["char_id"]);
     });
-    /////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
     // Creature table creation magic
   } catch (err) {
     console.error(err);
@@ -53,7 +53,6 @@ const addBtnListeners = async () => {
         throw new Error(errorMessage);
       }
 
-      const data = await response.json();
       ///////////////////////////////////////////////////////////////////////////////////////////////
       // Switch button handler
       ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -65,17 +64,31 @@ const addBtnListeners = async () => {
   });
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-// Adding the edit and delete listeners
-const addEditDeleteListeners = async () => {
-  ///////////////////////////////////////////////////////////////////////////////////////////////////
-  // Add
+// Moving the selected entry to the edit/delete box
+const moveToUsualRoom = async (id) => {
+  const usualRmArr = document.querySelectorAll(".usual-room");
+
+  try {
+    const response = await fetch(
+      `https://encounter-gen.onrender.com/party/${id}`
+    );
+    const returnObj = await response.json();
+    const keysArr = Object.keys(returnObj);
+    for (let i = 0; i < usualRmArr.length; i++) {
+      usualRmArr[i].value = returnObj[keysArr[i + 1]];
+    }
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 const attachToCol = (val, locStr, cls) => {
   const loc = document.querySelector(locStr);
   const div = document.createElement("div");
   div.textContent = val;
-  div.classList.add(`entry${cls}`);
+  div.addEventListener("click", () => {
+    const returnedObj = moveToUsualRoom(cls);
+  });
   loc.appendChild(div);
 };
 
