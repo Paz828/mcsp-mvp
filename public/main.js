@@ -4,7 +4,10 @@ const createPage = async () => {
   try {
     // Party table creation magic
     const partyResponse = await fetch(
-      "https://encounter-gen.onrender.com/party"
+      "https://encounter-gen.onrender.com/party",
+      {
+        method: "GET",
+      }
     );
     const partyData = await partyResponse.json();
     console.log(partyData);
@@ -22,24 +25,25 @@ const createPage = async () => {
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // Submit button handler
-// const addListeners = async () => {
-//   const postForm = document.querySelector("#post-btn");
-//   postForm.addEventListener("click", (data) => {
-//     console.log("here");
-//     // const response = await fetch("https://encounter-gen.onrender.com/party", {
-//     //   method: "post",
-//     //   headers: {
-//     //     "Content-Type": "application/json",
-//     //   },
-//     //   body: JSON.stringify(data),
-//     // });
-//     // const postData = await response.json();
-//     // console.log(postData);
-//     createPage();
-//   });
-/////////////////////////////////////////////////////////////////////////////////////////////////
-// Switch button handler
-// };
+const addListeners = async () => {
+  const postForm = document.querySelector("#post-btn");
+  postForm.addEventListener("click", async (data) => {
+    console.log("here");
+    const response = await fetch("https://encounter-gen.onrender.com/party", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const postData = await response.json();
+    console.log(postData);
+    createPage();
+  });
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Switch button handler
+};
+
 const attachToCol = (val, locStr, cls) => {
   const loc = document.querySelector(locStr);
   const div = document.createElement("div");
@@ -49,4 +53,4 @@ const attachToCol = (val, locStr, cls) => {
 };
 
 createPage();
-addListeners();
+// addListeners();
