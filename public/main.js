@@ -4,7 +4,7 @@ const createPage = async () => {
   try {
     // Party table creation magic
     const partyResponse = await fetch(
-      "https://encounter-gen.onrender.com/party"
+      "https://corsproxy.io/?https://encounter-gen.onrender.com/party"
     );
     console.log(partyResponse);
     const partyData = await partyResponse.json();
@@ -25,14 +25,16 @@ const createPage = async () => {
 const addListeners = async () => {
   const postForm = document.querySelector("#post-btn");
   postForm.addEventListener("submit", async (data) => {
-    const response = await fetch("https://encounter-gen.onrender.com/party", {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    const response = await fetch(
+      "https://corsproxy.io/?https://encounter-gen.onrender.com/party",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
     const postData = await response.json();
     createPage();
     console.log(postData);
