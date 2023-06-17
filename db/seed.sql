@@ -13,8 +13,8 @@ CREATE TABLE creatures(
     creature_id SERIAL PRIMARY KEY,
     creature_lvl INT,
     creature_name VARCHAR (100),
-    creature_url TEXT,
-    creature_plane VARCHAR (20)
+    creature_plane VARCHAR (20),
+    creature_url TEXT
 );
 
 INSERT INTO party
@@ -24,7 +24,7 @@ VALUES
     (5, 'Roland', 'Fighter', 'Dwarf');
 
 INSERT INTO creatures
-    (creature_lvl, creature_name, creature_url, creature_plane)
+    (creature_lvl, creature_name, creature_plane, creature_url)
 VALUES
-    (9, 'Frost Giant', 'https://2e.aonprd.com/Monsters.aspx?ID=222', 'Matereial Plane'),
-    (6, 'Ether Speder', 'https://2e.aonprd.com/Monsters.aspx?ID=203', 'Ethereal Plane');
+    (9, 'Frost Giant', 'Matereial Plane', 'https://2e.aonprd.com/Monsters.aspx?ID=222'),
+    (6, 'Ether Speder', 'Ethereal Plane', 'https://2e.aonprd.com/Monsters.aspx?ID=203');
