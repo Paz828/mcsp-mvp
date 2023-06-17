@@ -75,7 +75,31 @@ app.delete("/party/:id", async (req, res) => {
   }
 });
 //UPDATE one
+app.put("/party/:id", async (req, res) => {
+  const { id } = req.params;
+  let input = "";
 
+  const bodyArr = Object.keys(req.body);
+  bodyArr.forEach((elem) => {
+    if (typeof req.body[elem] === "string") {
+      req.body[elem] = `'${req.body[elem]}'`;
+    }
+    if (!input) {
+      input += `${elem} = ${req.body[elem]}`;
+    } else {
+      input += `, ${elem} = ${req.body[elem]}`;
+    }
+  });
+
+  const SQLcode = `UPDATE party SET ${input} WHERE char_id = ${id} RETURNING *;`;
+  try {
+    const result = await pool.query(SQLcode);
+    res.status(200).send(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Servor Error");
+  }
+});
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // creatures table enpoints
 
