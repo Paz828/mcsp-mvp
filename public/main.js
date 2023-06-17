@@ -36,7 +36,6 @@ const addBtnListeners = async () => {
       const formData = new FormData(form);
       const plainFormData = Object.fromEntries(formData.entries());
       const formDataJsonString = JSON.stringify(plainFormData);
-      console.log(formDataJsonString);
 
       const fetchOptions = {
         method: "POST",
