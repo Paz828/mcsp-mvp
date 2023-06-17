@@ -24,24 +24,51 @@ const createPage = async () => {
   }
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-// Submit button handler
-const addListeners = async () => {
-  const postForm = document.querySelector("#post-btn");
-  postForm.addEventListener("click", async (data) => {
-    console.log("here");
-    const response = await fetch("https://encounter-gen.onrender.com/party", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    const postData = await response.json();
-    console.log(postData);
+// Adding listeners to buttons
+const addBtnListeners = async () => {
+  const postForm = document.querySelector("#post-form");
+  postForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const url = form.action;
+    // Form handlers
+    try {
+      const formData = new FormData(form);
+      const plainFormData = Object.fromEntries(formData.entries());
+      const formDataJsonString = JSON.stringify(plainFormData);
+      console.log(formDataJsonString);
+
+      const fetchOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: formDataJsonString,
+      };
+      const response = await fetch(url, fetchOptions);
+
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(errorMessage);
+      }
+
+      const data = await response.json();
+      ///////////////////////////////////////////////////////////////////////////////////////////////
+      // Switch button handler
+      ///////////////////////////////////////////////////////////////////////////////////////////////
+      // Encounter button handler
+    } catch (err) {
+      console.error(err);
+    }
     createPage();
   });
-  ////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Switch button handler
+};
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// Adding the edit and delete listeners
+const addEditDeleteListeners = async () => {
+  ///////////////////////////////////////////////////////////////////////////////////////////////////
+  // Add
 };
 
 const attachToCol = (val, locStr, cls) => {
@@ -53,4 +80,4 @@ const attachToCol = (val, locStr, cls) => {
 };
 
 createPage();
-// addListeners();
+addBtnListeners();

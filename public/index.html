@@ -11,16 +11,27 @@
     <br />
     <div id="post-container">
       <button id="switch">switch</button>
-      <form id="post-form" method="post">
+      <form id="post-form" action="https://encounter-gen.onrender.com/party">
         <div id="input-container">
-          <input id="col-1-input" type="text" value="Character Level" />
-          <input id="col-2-input" type="text" value="Character Name" />
-          <input id="col-3-input" type="text" value="Character Class" />
-          <input id="col-4-input" type="text" value="Character Ancestry" />
+          <input id="col-1-input" name="char_lvl" type="text" value="Level" />
+          <input
+            id="col-2-input"
+            name="char_name"
+            type="text"
+            value="Character Name"
+          />
+          <input id="col-3-input" name="char_class" type="text" value="Class" />
+          <input
+            id="col-4-input"
+            name="char_ancestry"
+            type="text"
+            value="Ancestry"
+          />
           <input id="post-btn" type="submit" value="submit" />
         </div>
       </form>
     </div>
+    <div id="edit-container" class="invis">edit container</div>
     <div id="table_container">
       <div id="party-container">
         <table id="party-table">
