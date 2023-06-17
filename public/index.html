@@ -32,7 +32,8 @@
       </form>
     </div>
     <div id="the-usual-room" class="invis">
-      <form action="https://encounter-gen.onrender.com/party">Character<br>
+      <form id="usual-room" action="https://encounter-gen.onrender.com/party">Character<br>
+        <input type="text" class="invis usual-room" id="hidden-room" name="char_id">
         <label for="lvl-room">Level:</label>
         <input type="text" class="usual-room" id="lvl-room" name="char_lvl"><br>
         <label for="name-room">Name:</label>
@@ -41,6 +42,9 @@
         <input type="text" class="usual-room" id="class-room" name="char_class"><br>
         <label for="ancestry-room">Ancestry:</label>
         <input type="text" class="usual-room" id="ancestry-room" name="char_ancestry"><br>
+        <button type="submit" id="del-btn" name="usual_btn" value="delete">delete</button>
+        <button type="submit" id="edit-btn" name="usual_btn" value="edit">change</button>
+        <div id="indicator"></div>
       </form>
     </div>
     </div>
@@ -84,6 +88,7 @@
       <input id="rngsus-input" type="text" value="Threat Level" />
       <button id="rngsus-btn">submit</button>
     </div>
+    <div id="rngsus-output" class="invis">rngsus</div>
     <script src="main.js"></script>
   </body>
 </html>

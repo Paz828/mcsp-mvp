@@ -1,6 +1,10 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // Create main page on start up
 const createPage = async () => {
+  const delArr = document.querySelectorAll(".deletable");
+  delArr.forEach((elem) => {
+    elem.remove();
+  });
   try {
     // Party table creation magic
     const partyResponse = await fetch(
@@ -10,7 +14,6 @@ const createPage = async () => {
       }
     );
     const partyData = await partyResponse.json();
-    console.log(partyData);
     partyData.forEach((elem) => {
       attachToCol(elem["char_lvl"], "#char-lvl", elem["char_id"]);
       attachToCol(elem["char_name"], "#char-name", elem["char_id"]);
@@ -24,8 +27,8 @@ const createPage = async () => {
   }
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-// Adding listeners to buttons
-const addBtnListeners = async () => {
+// Adding listeners to submit and switch buttons
+const addSubSwitchBtnListeners = async () => {
   const postForm = document.querySelector("#post-form");
   postForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -74,17 +77,67 @@ const moveToUsualRoom = async (id) => {
     const returnObj = await response.json();
     const keysArr = Object.keys(returnObj);
     for (let i = 0; i < usualRmArr.length; i++) {
-      usualRmArr[i].value = returnObj[keysArr[i + 1]];
+      usualRmArr[i].value = returnObj[keysArr[i]];
     }
   } catch (err) {
     console.error(err);
   }
 };
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// Adding functionality to the delete/edit buttons
+const addEditDelBtnListeners = async () => {
+  // Form event handler
+  const delBtn = document.querySelector("#del-btn");
+  const editBtn = document.querySelector("#edit-btn");
+  delBtn.addEventListener("click", () => {
+    const indicator = document.querySelector("#indicator");
+    indicator.textContent = "delete";
+  });
+  editBtn.addEventListener("click", () => {
+    const indicator = document.querySelector("#indicator");
+    indicator.textContent = "edit";
+  });
 
+  const theUsualRm = document.querySelector("#usual-room");
+  theUsualRm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = document.querySelector("#hidden-room").value;
+    const form = e.currentTarget;
+    let url = form.action;
+    url += `/${id}`;
+
+    try {
+      // Delete button handler
+      let indicated = document.querySelector("#indicator");
+      if (indicated.textContent === "delete") {
+        const response = await fetch(url, { method: "DELETE" });
+
+        if (!response.ok) {
+          const errorMessage = await response.text();
+          throw new Error(errorMessage);
+        }
+        // } else if {
+        // const formData = new FormData(form);
+        // console.log(e.target);
+        // const plainFormData = Object.fromEntries(formData.entries());
+        // console.log(plainFormData);
+        // ///////////////////////////////////////////////////////////////////////////////////////////////
+        // // Edit button handler
+        //   let non = 'non'
+      }
+    } catch (err) {
+      console.error(err);
+    }
+    createPage();
+  });
+};
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// Function that attaches things to the table
 const attachToCol = (val, locStr, cls) => {
   const loc = document.querySelector(locStr);
   const div = document.createElement("div");
   div.textContent = val;
+  div.classList.add("deletable");
   div.addEventListener("click", () => {
     const returnedObj = moveToUsualRoom(cls);
   });
@@ -92,4 +145,5 @@ const attachToCol = (val, locStr, cls) => {
 };
 
 createPage();
-addBtnListeners();
+addSubSwitchBtnListeners();
+addEditDelBtnListeners();
