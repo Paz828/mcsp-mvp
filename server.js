@@ -173,9 +173,12 @@ app.put("/creature/:id", async (req, res) => {
 
   const bodyArr = Object.keys(req.body);
   bodyArr.forEach((elem) => {
-    if (typeof req.body[elem] === "string") {
+    if (!req.body[elem]) {
+      return;
+    } else if (typeof req.body[elem] === "string") {
       req.body[elem] = `'${req.body[elem]}'`;
     }
+
     if (!input) {
       input += `${elem} = ${req.body[elem]}`;
     } else {
