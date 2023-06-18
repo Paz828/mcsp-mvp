@@ -154,7 +154,7 @@ const moveToUsualRoom = async (id, type) => {
       const charLabelValArr = ["Class:", "Ancestry:"];
 
       for (let i = 0; i < inputIdArr.length; i++) {
-        changeUp(inputIdArr[1], charInputValArr[i], undefined, "input");
+        changeUp(inputIdArr[i], charInputValArr[i], undefined, "input");
       }
 
       for (let i = 0; i < labelIdArr.length; i++) {
@@ -176,7 +176,7 @@ const moveToUsualRoom = async (id, type) => {
       const creatureLabelValArr = ["Plane:", "URL:"];
 
       for (let i = 0; i < inputIdArr.length; i++) {
-        changeUp(inputIdArr[1], creatureInputValArr[i], undefined, "input");
+        changeUp(inputIdArr[i], creatureInputValArr[i], undefined, "input");
       }
 
       for (let i = 0; i < labelIdArr.length; i++) {
