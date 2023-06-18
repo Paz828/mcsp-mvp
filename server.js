@@ -46,7 +46,7 @@ app.get("/party/:id", async (req, res) => {
 
 //CREATE one
 app.post("/party", async (req, res) => {
-  const { creature_lvl, char_name, char_class, char_ancestry } = req.body;
+  const { char_lvl, char_name, char_class, char_ancestry } = req.body;
 
   try {
     const result = await pool.query(
