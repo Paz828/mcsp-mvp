@@ -138,7 +138,7 @@ app.post("/creature", async (req, res) => {
 
   try {
     const result = await pool.query(
-      "INSERT INTO creature (creature_lvl, creature_name, creature_plane, creature_url) VALUES ($1, $2, $3, $4) RETURNING *",
+      "INSERT INTO creatures (creature_lvl, creature_name, creature_plane, creature_url) VALUES ($1, $2, $3, $4) RETURNING *",
       [creature_lvl, creature_name, creature_plane, creature_url]
     );
     res.status(201).send(result.rows[0]);
@@ -154,7 +154,7 @@ app.delete("/creature/:id", async (req, res) => {
 
   try {
     const result = await pool.query(
-      "DELETE FROM creature WHERE creature_id = $1 RETURNING *",
+      "DELETE FROM creatures WHERE creature_id = $1 RETURNING *",
       [id]
     );
     res.status(200).json(result.rows[0]);
