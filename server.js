@@ -50,7 +50,7 @@ app.post("/party", async (req, res) => {
 
   try {
     const result = await pool.query(
-      "INSERT INTO party (char_lvl, char_name, char_class, char_ancestry) VALUES ($1, $2, $3, $4) RETURNING *",
+      "INSERT INTO party (char_lvl, char_name, char_class, char_ancestry) VALUES ($1, $2, $3, $4)",
       [char_lvl, char_name, char_class, char_ancestry]
     );
     res.status(201).send(result.rows[0]);
@@ -69,7 +69,7 @@ app.delete("/party/:id", async (req, res) => {
       "DELETE FROM party WHERE char_id = $1 RETURNING *",
       [id]
     );
-    res.status(200).json(result.rows[0]);
+    res.status(204).json(result.rows[0]);
   } catch (err) {
     console.error(err);
     res.send("Internal Server Error").status(500);
@@ -82,9 +82,12 @@ app.put("/party/:id", async (req, res) => {
 
   const bodyArr = Object.keys(req.body);
   bodyArr.forEach((elem) => {
-    if (typeof req.body[elem] === "string") {
+    if (!req.body[elem]) {
+      return;
+    } else if (typeof req.body[elem] === "string") {
       req.body[elem] = `'${req.body[elem]}'`;
     }
+
     if (!input) {
       input += `${elem} = ${req.body[elem]}`;
     } else {

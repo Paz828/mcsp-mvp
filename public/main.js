@@ -2,9 +2,11 @@
 // Create main page on start up
 const createPage = async () => {
   const delArr = document.querySelectorAll(".deletable");
+  console.log(delArr.length);
   delArr.forEach((elem) => {
     elem.remove();
   });
+  console.log("test");
   try {
     // Party table creation magic
     const partyResponse = await fetch(
@@ -14,6 +16,7 @@ const createPage = async () => {
       }
     );
     const partyData = await partyResponse.json();
+    console.log(partyData);
     partyData.forEach((elem) => {
       attachToCol(elem["char_lvl"], "#char-lvl", elem["char_id"]);
       attachToCol(elem["char_name"], "#char-name", elem["char_id"]);
@@ -29,6 +32,7 @@ const createPage = async () => {
       }
     );
     const creaturesData = await creaturesResponse.json();
+    console.log(creaturesData);
     creaturesData.forEach((elem) => {
       attachToCol(elem["creature_lvl"], "#creature-lvl", elem["creature_id"]);
       attachToCol(elem["creature_name"], "#creature-name", elem["creature_id"]);
@@ -45,6 +49,7 @@ const createPage = async () => {
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // Adding listeners to submit and switch buttons
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 // Submit button handler
 const addSubmitBtnListener = async () => {
   const postForm = document.querySelector("#post-form");
@@ -56,7 +61,6 @@ const addSubmitBtnListener = async () => {
     const formData = new FormData(form);
     const plainFormData = Object.fromEntries(formData.entries());
     const formDataJsonString = JSON.stringify(plainFormData);
-    console.log(formDataJsonString);
     const fetchOptions = {
       method: "POST",
       headers: {
@@ -70,7 +74,6 @@ const addSubmitBtnListener = async () => {
       switch (document.querySelector("#col-2-input").name) {
         case "char_name":
           url += "party";
-          console.log(url);
           const partyResponse = await fetch(url, fetchOptions);
 
           if (!partyResponse.ok) {
@@ -124,12 +127,66 @@ const addSwitchBtnListener = async () => {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // Moving the selected entry to the edit/delete box
-const moveToUsualRoom = async (id) => {
+const moveToUsualRoom = async (id, type) => {
   const usualRmArr = document.querySelectorAll(".usual-room");
+  const h2 = document.querySelector("#usual-room-title");
+  const inputIdArr = [
+    "#hidden-room",
+    "#lvl-room",
+    "#name-room",
+    "#class-plane-room",
+    "#ancestry-url-room",
+  ];
+  const labelIdArr = ["#class-plane-label", "#ancestry-url-label"];
 
+  switch (type) {
+    case "party":
+      h2.innerHTML = "Character";
+
+      const charInputValArr = [
+        "char_id",
+        "char_lvl",
+        "char_name",
+        "char_class",
+        "char_ancestry",
+      ];
+
+      const charLabelValArr = ["Class:", "Ancestry:"];
+
+      for (let i = 0; i < inputIdArr.length; i++) {
+        changeUp(inputIdArr[1], charInputValArr[i], undefined, "input");
+      }
+
+      for (let i = 0; i < labelIdArr.length; i++) {
+        changeUp(labelIdArr[i], undefined, charLabelValArr[i], "label");
+      }
+      break;
+
+    case "creature":
+      h2.innerHTML = "Creature";
+
+      const creatureInputValArr = [
+        "creature_id",
+        "creature_lvl",
+        "creature_name",
+        "creature_plane",
+        "creature_url",
+      ];
+
+      const creatureLabelValArr = ["Plane:", "URL:"];
+
+      for (let i = 0; i < inputIdArr.length; i++) {
+        changeUp(inputIdArr[1], creatureInputValArr[i], undefined, "input");
+      }
+
+      for (let i = 0; i < labelIdArr.length; i++) {
+        changeUp(labelIdArr[i], undefined, creatureLabelValArr[i], "label");
+      }
+      break;
+  }
   try {
     const response = await fetch(
-      `https://encounter-gen.onrender.com/party/${id}`
+      `https://encounter-gen.onrender.com/${type}/${id}`
     );
     const returnObj = await response.json();
     const keysArr = Object.keys(returnObj);
@@ -157,9 +214,17 @@ const addDelBtnListeners = async () => {
     const id = document.querySelector("#hidden-room").value;
     const form = e.currentTarget;
     let url = form.action;
-    url += `/${id}`;
-
     try {
+      switch (document.querySelector("#usual-room-title").textContent) {
+        case "Character":
+          url += `party/${id}`;
+          break;
+
+        case "Creature":
+          url += `creature/${id}`;
+          break;
+      }
+      console.log(document.querySelector("#usual-room-title"));
       let indicated = document.querySelector("#indicator");
       if (indicated.textContent === "delete") {
         const response = await fetch(url, { method: "DELETE" });
@@ -168,11 +233,11 @@ const addDelBtnListeners = async () => {
           const errorMessage = await response.text();
           throw new Error(errorMessage);
         }
+        createPage();
       }
     } catch (err) {
       console.error(err);
     }
-    createPage();
   });
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -190,9 +255,17 @@ const addEditBtnListeners = async () => {
     const id = document.querySelector("#hidden-room").value;
     const form = e.currentTarget;
     let url = form.action;
-    url += `/${id}`;
 
     try {
+      switch (document.querySelector("#usual-room-title").textContent) {
+        case "Character":
+          url += `party/${id}`;
+          break;
+
+        case "Creature":
+          url += `creature/${id}`;
+          break;
+      }
       let indicated = document.querySelector("#indicator");
       if (indicated.textContent === "edit") {
         const formData = new FormData(form);
@@ -214,19 +287,19 @@ const addEditBtnListeners = async () => {
           throw new Error(errorMessage);
         }
         alert(`Character Updated`);
+        createPage();
       }
     } catch (err) {
       console.error(err);
     }
-    createPage();
   });
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // Utility functions
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 // Function that attaches things to the table
-const attachToCol = (val, locStr, cls) => {
+const attachToCol = (val, locStr, id) => {
   const loc = document.querySelector(locStr);
   const div = document.createElement("div");
   if (/url/.test(locStr)) {
@@ -235,9 +308,15 @@ const attachToCol = (val, locStr, cls) => {
     a.textContent = "See Page";
     div.appendChild(a);
   } else {
+    let type;
+    if (/char/.test(locStr)) {
+      type = "party";
+    } else if (/creature/.test(locStr)) {
+      type = "creature";
+    }
     div.textContent = val;
     div.addEventListener("click", () => {
-      const returnedObj = moveToUsualRoom(cls);
+      moveToUsualRoom(id, type);
     });
   }
   div.classList.add("deletable");

@@ -26,5 +26,5 @@ VALUES
 INSERT INTO creatures
     (creature_lvl, creature_name, creature_plane, creature_url)
 VALUES
-    (9, 'Frost Giant', 'Matereial Plane', 'https://2e.aonprd.com/Monsters.aspx?ID=222'),
-    (6, 'Ether Speder', 'Ethereal Plane', 'https://2e.aonprd.com/Monsters.aspx?ID=203');
+    (9, 'Frost Giant', 'Material', 'https://2e.aonprd.com/Monsters.aspx?ID=222'),
+    (6, 'Ether Spider', 'Ethereal', 'https://2e.aonprd.com/Monsters.aspx?ID=203');
