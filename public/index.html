@@ -6,7 +6,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="main.css" />
   </head>
-  <body>
+  <body >
     <h1>Test Text</h1>
     <br />
     <div id="post-container">
@@ -84,11 +84,39 @@
         </table>
       </div>
     </div>
+    <br>
     <div id="encounter-rngsus">
-      <input id="rngsus-input" type="text" value="Threat Level" />
-      <button id="rngsus-btn">submit</button>
+      <form id="rngsus-form" action="#">
+        <label id="rngsus-label" for="rngsus-input">Threat Level:</label>
+        <select id="rngsus-input" name="threat">
+          <option value="select">Select Threat Level</option>
+          <option value="trivial">Trivial</option>
+          <option value="low">Low</option>
+          <option value="moderate">Moderate</option>
+          <option value="severe">Severe</option>
+          <option value="extreme">Extreme</option>
+        </select>
+        <button type="submit" id="rngsus-btn">submit</button>  
+      </form>
     </div>
-    <div id="rngsus-output" class="invis">rngsus</div>
+    <div id="rngsus-output" class="invis">
+      <table id="rngsus-table">
+        <thead>
+          <tr>
+            <th colspan="4">Encounter</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="rngsus-lvl">Lvl</td>
+            <td id="rngsus-name">Name</td>
+            <td id="rngsus-plane">Plane</td>
+            <td id="rngsus-url">URL</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
     <script src="main.js"></script>
   </body>
 </html>

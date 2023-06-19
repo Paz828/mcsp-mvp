@@ -2,11 +2,9 @@
 // Create main page on start up
 const createPage = async () => {
   const delArr = document.querySelectorAll(".deletable");
-  console.log(delArr.length);
   delArr.forEach((elem) => {
     elem.remove();
   });
-  console.log("test");
   try {
     // Party table creation magic
     const partyResponse = await fetch(
@@ -16,7 +14,6 @@ const createPage = async () => {
       }
     );
     const partyData = await partyResponse.json();
-    console.log(partyData);
     partyData.forEach((elem) => {
       attachToCol(elem["char_lvl"], "#char-lvl", elem["char_id"]);
       attachToCol(elem["char_name"], "#char-name", elem["char_id"]);
@@ -32,7 +29,6 @@ const createPage = async () => {
       }
     );
     const creaturesData = await creaturesResponse.json();
-    console.log(creaturesData);
     creaturesData.forEach((elem) => {
       attachToCol(elem["creature_lvl"], "#creature-lvl", elem["creature_id"]);
       attachToCol(elem["creature_name"], "#creature-name", elem["creature_id"]);
@@ -124,7 +120,46 @@ const addSwitchBtnListener = async () => {
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Encounter button handler
+const addRngsusBtnListener = () => {
+  const form = document.querySelector("#rngsus-form");
+  let encounterList;
+  form.addEventListener("submit", async () => {
+    await createPage();
+    const value = document.querySelector("#rngsus-input").value;
+    const partySize = partyAvg()[1];
+    switch (value) {
+      case "trivial":
+        encounterList = generateEncounters(partySize, 40, 10);
+        break;
 
+      case "low":
+        encounterList = generateEncounters(partySize, 60, 15);
+        break;
+
+      case "moderate":
+        encounterList = generateEncounters(partySize, 80, 20);
+        break;
+
+      case "severe":
+        encounterList = generateEncounters(partySize, 120, 30);
+        break;
+
+      case "extreme":
+        encounterList = generateEncounters(partySize, 160, 40);
+        break;
+
+      default:
+        alert("Please select a threat level.");
+    }
+    encounterList.forEach((elem) => {
+      const entryArr = document.querySelectorAll(`.${elem}`);
+      attachToCol(entryArr[0].textContent, "#rngsus-lvl", undefined);
+      attachToCol(entryArr[1].textContent, "#rngsus-name", undefined);
+      attachToCol(entryArr[2].textContent, "#rngsus-plane", undefined);
+      attachToCol(entryArr[3].textContent, "#rngsus-url", undefined);
+    });
+  });
+};
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // Moving the selected entry to the edit/delete box
 const moveToUsualRoom = async (id, type) => {
@@ -199,7 +234,7 @@ const moveToUsualRoom = async (id, type) => {
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // Adding functionality to the delete/edit buttons
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 // Delete button handler
 const addDelBtnListeners = async () => {
   const delBtn = document.querySelector("#del-btn");
@@ -224,7 +259,6 @@ const addDelBtnListeners = async () => {
           url += `creature/${id}`;
           break;
       }
-      console.log(document.querySelector("#usual-room-title"));
       let indicated = document.querySelector("#indicator");
       if (indicated.textContent === "delete") {
         const response = await fetch(url, { method: "DELETE" });
@@ -294,7 +328,6 @@ const addEditBtnListeners = async () => {
     }
   });
 };
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // Utility functions
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -302,22 +335,28 @@ const addEditBtnListeners = async () => {
 const attachToCol = (val, locStr, id) => {
   const loc = document.querySelector(locStr);
   const div = document.createElement("div");
+
+  let type;
+  if (/char/.test(locStr)) {
+    type = "party";
+    div.classList.add(`party-entry${id}`);
+  } else if (/creature/.test(locStr)) {
+    type = "creature";
+    div.classList.add(`creature-entry${id}`);
+  }
+
   if (/url/.test(locStr)) {
     const a = document.createElement("a");
     a.href = val;
     a.textContent = "See Page";
     div.appendChild(a);
   } else {
-    let type;
-    if (/char/.test(locStr)) {
-      type = "party";
-    } else if (/creature/.test(locStr)) {
-      type = "creature";
-    }
     div.textContent = val;
-    div.addEventListener("click", () => {
-      moveToUsualRoom(id, type);
-    });
+    if (id) {
+      div.addEventListener("click", () => {
+        moveToUsualRoom(id, type);
+      });
+    }
   }
   div.classList.add("deletable");
   loc.appendChild(div);
@@ -336,9 +375,124 @@ const changeUp = (locStr, newName, val, type) => {
       break;
   }
 };
+// Function that averages the party level
+const partyAvg = () => {
+  const charLvlCol = document.querySelector("#char-lvl").childNodes;
+  let runningTotal = 0;
+  let rowNum = charLvlCol.length - 1;
+  let avg;
+  charLvlCol.forEach((elem) => {
+    if (Object.is(elem.textContent * 1, NaN)) {
+      return;
+    } else {
+      runningTotal += parseInt(elem.textContent);
+    }
+  });
+  avg = Math.floor(runningTotal / rowNum);
+  return [avg, rowNum];
+};
+// Function that makes an object of arrays of the monsters
+const levelOrganizer = () => {
+  const avg = partyAvg()[0];
+  const creatureLvlCol = document.querySelector("#creature-lvl").childNodes;
+  let creatureObj = {
+    lowLackey: [10, []],
+    lowModLackey: [15, []],
+    lackeyCreature: [20, []],
+    stanCreature: [30, []],
+    creatureLowBoss: [40, []],
+    lowModBoss: [60, []],
+    modSevBoss: [80, []],
+    sevExBoss: [120, []],
+    exBoss: [160, []],
+    outtaRange: [],
+  };
+  creatureLvlCol.forEach((elem) => {
+    if (Object.is(elem.textContent * 1, NaN)) {
+      return;
+    } else {
+      switch (parseInt(elem.textContent)) {
+        case avg - 4:
+          creatureObj.lowLackey[1].push(elem.classList[0]);
+          break;
+
+        case avg - 3:
+          creatureObj.lowModLackey[1].push(elem.classList[0]);
+          break;
+
+        case avg - 2:
+          creatureObj.lackeyCreature[1].push(elem.classList[0]);
+
+          break;
+
+        case avg - 1:
+          creatureObj.stanCreature[1].push(elem.classList[0]);
+
+          break;
+
+        case avg:
+          creatureObj.creatureLowBoss[1].push(elem.classList[0]);
+
+          break;
+
+        case avg + 1:
+          creatureObj.lowModBoss[1].push(elem.classList[0]);
+          break;
+
+        case avg + 2:
+          creatureObj.modSevBoss[1].push(elem.classList[0]);
+          break;
+
+        case avg + 3:
+          creatureObj.sevExBoss[1].push(elem.classList[0]);
+          break;
+
+        case avg + 4:
+          creatureObj.exBoss[1].push(elem.classList[0]);
+          break;
+
+        default:
+          creatureObj.outtaRange.push(elem.classList[0]);
+      }
+    }
+  });
+  return creatureObj;
+};
+//Function that generates the random encounters
+const generateEncounters = (party, bdgt, adj) => {
+  const creatureObj = levelOrganizer();
+  let budget;
+  let encounter = [];
+  if (party < 4) {
+    budget = bdgt - (4 - party) * adj;
+  } else if (party > 4) {
+    budget = bdgt + (party - 4) * adj;
+  } else {
+    budget = bdgt;
+  }
+
+  const creatureKeysArr = Object.keys(creatureObj);
+  while (budget > 5) {
+    const randomKey = Math.floor(Math.random() * (creatureKeysArr.length - 1));
+    const tempKey = creatureObj[creatureKeysArr[randomKey]];
+    if (budget < tempKey[0] || tempKey[1].length === 0) {
+      continue;
+    } else {
+      const randomCreature = Math.floor(Math.random() * tempKey[1].length);
+      const tempVal = tempKey[1][randomCreature];
+      encounter.push(tempVal);
+      budget -= tempKey[0];
+    }
+  }
+  return encounter;
+};
 
 createPage();
 addSubmitBtnListener();
 addDelBtnListeners();
 addEditBtnListeners();
 addSwitchBtnListener();
+addRngsusBtnListener();
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// CSS mumbo jumbo
+/////////////////////////////////////////////////////////////////////////////////////////////////////
