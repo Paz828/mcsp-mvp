@@ -1,23 +1,172 @@
-body {
-  background-image: url("https://cdn.paizo.com/a7d62ac8-7f03-00ef-f1f0-83fb8bf332e2/ac08fe79-b3e4-4c03-be75-6abc724e68f4/102120_wizard-pt4-journal2.png");
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+/*Background CSS*/
+#bg {
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  background-position: center center;
+  background-image: url(https://cdn.paizo.com/a7d62ac8-7f03-00ef-f1f0-83fb8bf332e2/ac08fe79-b3e4-4c03-be75-6abc724e68f4/102120_wizard-pt4-journal2.png);
+  background-size: 100% auto;
+  background-attachment: fixed;
   background-repeat: no-repeat;
-  background-size: auto;
 }
 
-h1 {
-  text-align: center;
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+/*Visibility and "Random"-Based CSS*/
+.transparency {
+  background-color: transparent;
+  border-color: transparent;
 }
 
-#input-container {
-  text-align: center;
+.transparency:nth-child(3n + 1) {
+  transform: rotate(-1deg);
 }
 
+.transparency:nth-child(even) {
+  transform: rotate(2deg);
+}
+
+.invis {
+  display: none;
+}
+
+.tilt:nth-child(odd) {
+  transform: rotate(2deg);
+}
+
+.tilt:nth-child(even) {
+  transform: rotate(-2deg);
+}
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+/*Text-Based CSS*/
+body {
+  margin: 0;
+  font-family: "Reenie Beanie", cursive, "PT Sans", Calibri, Tahoma, sans-serif;
+  font-size: x-large;
+}
+
+input,
+button,
+select,
+label {
+  font-family: "Reenie Beanie", cursive, "PT Sans", Calibri, Tahoma, sans-serif;
+  font-size: x-large;
+}
+
+.usual-room,
+#input-container,
 th {
   text-align: center;
+}
+
+.usual-room {
+  width: 18vw;
 }
 
 #post-container {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.titles {
+  font-size: 48px;
+}
+
+.title {
+  font-size: 70px;
+}
+
+.table-title {
+  font-size: 30px;
+}
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+/*Position-Based CSS*/
+#page {
+  position: relative;
+  height: 98vh;
+  width: 98vw;
+  background-position: center center;
+  background-size: 100% auto;
+  background-attachment: fixed;
+}
+
+#post-container {
+  width: 30vw;
+  height: 10vw;
+  position: absolute;
+  top: 5vh;
+  right: 9vw;
+  transform-origin: 100% 100%;
+  transform: rotate(-0.5deg);
+}
+
+.title {
+  width: 25vw;
+  height: 10vw;
+  position: absolute;
+  top: 0vh;
+  left: 8vw;
+  transform-origin: 100% 100%;
+}
+
+.title2 {
+  width: 25vw;
+  height: 10vw;
+  position: absolute;
+  top: -0.5vh;
+  right: 8vw;
+  transform-origin: 100% 100%;
+}
+
+#switch-h1 {
+  width: 25vw;
+  height: 10vw;
+  position: absolute;
+  top: 0.5vh;
+  right: 3vw;
+  transform-origin: 100% 100%;
+}
+
+#table-container {
+  display: flex;
+  justify-content: space-between;
+  width: 30vw;
+  height: 15vw;
+  position: absolute;
+  top: 20vh;
+  right: 12vw;
+  transform-origin: 100% 100%;
+}
+
+#the-usual-room {
+  display: flex;
+  flex-wrap: wrap;
+  width: 25vw;
+  height: 25vw;
+  position: absolute;
+  top: 15vh;
+  left: 8vw;
+  transform-origin: 100% 100%;
+  transform: rotate(-2deg);
+}
+
+#encounter-rngsus {
+  width: 25vw;
+  height: 25vw;
+  position: absolute;
+  top: 64vh;
+  right: 15vw;
+  transform-origin: 100% 100%;
+}
+
+#rngsus-output {
+  width: 25vw;
+  height: 25vw;
+  position: absolute;
+  top: 63vh;
+  left: 8vw;
+  transform-origin: 100% 100%;
 }

@@ -14,12 +14,8 @@ const createPage = async () => {
       }
     );
     const partyData = await partyResponse.json();
-    partyData.forEach((elem) => {
-      attachToCol(elem["char_lvl"], "#char-lvl", elem["char_id"]);
-      attachToCol(elem["char_name"], "#char-name", elem["char_id"]);
-      attachToCol(elem["char_class"], "#char-class", elem["char_id"]);
-      attachToCol(elem["char_ancestry"], "#char-ancestry", elem["char_id"]);
-    });
+    const partyArr = makeColInfo(partyData);
+    makeRow(partyArr[0], "#party-table-body", partyArr[1]);
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // Creature table creation magic
     const creaturesResponse = await fetch(
@@ -29,16 +25,8 @@ const createPage = async () => {
       }
     );
     const creaturesData = await creaturesResponse.json();
-    creaturesData.forEach((elem) => {
-      attachToCol(elem["creature_lvl"], "#creature-lvl", elem["creature_id"]);
-      attachToCol(elem["creature_name"], "#creature-name", elem["creature_id"]);
-      attachToCol(
-        elem["creature_plane"],
-        "#creature-plane",
-        elem["creature_id"]
-      );
-      attachToCol(elem["creature_url"], "#creature-url", elem["creature_id"]);
-    });
+    const creatureArr = makeColInfo(creaturesData);
+    makeRow(creatureArr[0], "#creature-table-body", creatureArr[1]);
   } catch (err) {
     console.error(err);
   }
@@ -107,6 +95,8 @@ const addSwitchBtnListener = async () => {
         changeUp("#col-2-input", "creature_name", "Creature Name", "input");
         changeUp("#col-3-input", "creature_plane", "Plane", "input");
         changeUp("#col-4-input", "creature_url", "URL", "input");
+        changeUp("#switch-h1", undefined, "Creature", "label");
+        changeUp("#switch", undefined, "Add Character", "label");
         break;
 
       case "creature_name":
@@ -114,6 +104,8 @@ const addSwitchBtnListener = async () => {
         changeUp("#col-2-input", "char_name", "Character Name", "input");
         changeUp("#col-3-input", "char_class", "Class", "input");
         changeUp("#col-4-input", "char_ancestry", "Ancestry", "input");
+        changeUp("#switch-h1", undefined, "Character", "label");
+        changeUp("#switch", undefined, "Add Creature", "label");
         break;
     }
   });
@@ -151,18 +143,22 @@ const addRngsusBtnListener = () => {
       default:
         alert("Please select a threat level.");
     }
+    let inputArr = [];
     encounterList.forEach((elem) => {
-      const entryArr = document.querySelectorAll(`.${elem}`);
-      attachToCol(entryArr[0].textContent, "#rngsus-lvl", undefined);
-      attachToCol(entryArr[1].textContent, "#rngsus-name", undefined);
-      attachToCol(entryArr[2].textContent, "#rngsus-plane", undefined);
-      attachToCol(entryArr[3].textContent, "#rngsus-url", undefined);
+      let tempArr = [];
+      const rowList = document.querySelector(`.${elem}`).childNodes;
+      rowList.forEach((elem) => {
+        tempArr.push(elem.textContent);
+      });
+      inputArr.push(tempArr);
     });
+    makeRow(inputArr, "#rngsus-table-body");
   });
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // Moving the selected entry to the edit/delete box
 const moveToUsualRoom = async (id, type) => {
+  console.log("moving");
   const usualRmArr = document.querySelectorAll(".usual-room");
   const h2 = document.querySelector("#usual-room-title");
   const inputIdArr = [
@@ -220,6 +216,7 @@ const moveToUsualRoom = async (id, type) => {
       break;
   }
   try {
+    console.log(type);
     const response = await fetch(
       `https://encounter-gen.onrender.com/${type}/${id}`
     );
@@ -320,7 +317,6 @@ const addEditBtnListeners = async () => {
           const errorMessage = await response.text();
           throw new Error(errorMessage);
         }
-        alert(`Character Updated`);
         createPage();
       }
     } catch (err) {
@@ -331,35 +327,95 @@ const addEditBtnListeners = async () => {
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // Utility functions
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-// Function that attaches things to the table
-const attachToCol = (val, locStr, id) => {
+//Function that makes a new row and passes the arguments to it
+const makeRow = (colArr, locStr, idArr) => {
+  const check = colArr[0][3];
   const loc = document.querySelector(locStr);
-  const div = document.createElement("div");
+  let id = 0;
+  let i = 0;
+  colArr.forEach((elem) => {
+    const tr = document.createElement("tr");
+    const td1 = document.createElement("td");
+    const td2 = document.createElement("td");
+    const td3 = document.createElement("td");
+    const td4 = document.createElement("td");
+    let type;
 
-  let type;
-  if (/char/.test(locStr)) {
-    type = "party";
-    div.classList.add(`party-entry${id}`);
-  } else if (/creature/.test(locStr)) {
-    type = "creature";
-    div.classList.add(`creature-entry${id}`);
-  }
+    if (idArr) {
+      id = idArr[i];
+    }
 
-  if (/url/.test(locStr)) {
-    const a = document.createElement("a");
-    a.href = val;
-    a.textContent = "See Page";
-    div.appendChild(a);
-  } else {
-    div.textContent = val;
-    if (id) {
-      div.addEventListener("click", () => {
+    td1.innerHTML = elem[0];
+    td2.innerHTML = elem[1];
+    td3.innerHTML = elem[2];
+    if (idArr && /https/.test(elem[3])) {
+      console.log("creature");
+      tr.classList.add(`creature-entry${id}`);
+    }
+
+    if (/https/.test(elem[3])) {
+      const a = document.createElement("a");
+      a.href = elem[3];
+      a.textContent = "See Page";
+      td4.appendChild(a);
+      type = "creature";
+    } else {
+      td4.innerHTML = elem[3];
+      tr.classList.add(`party-entry${id}`);
+      type = "party";
+    }
+    if (idArr) {
+      tr.addEventListener("click", () => {
         moveToUsualRoom(id, type);
       });
     }
-  }
-  div.classList.add("deletable");
-  loc.appendChild(div);
+    tr.append(td1, td2, td3, td4);
+
+    if (/https/.test(check)) {
+    } else {
+    }
+    if (Math.floor(Math.random() * 10) % 2 === 0) {
+      tr.classList.add("tilt");
+    }
+    tr.classList.add("deletable");
+    loc.appendChild(tr);
+    i++;
+  });
+};
+
+// Function that attaches things to the table
+const makeColInfo = (arrOfObj) => {
+  let ArrOfArr = [];
+  let idArr = [];
+  arrOfObj.forEach((elem) => {
+    let tempArr = [];
+    let check;
+    if (elem["char_name"]) {
+      check = "party";
+    } else {
+      check = "creature";
+    }
+    switch (check) {
+      case "party":
+        tempArr.push(elem["char_lvl"]);
+        tempArr.push(elem["char_name"]);
+        tempArr.push(elem["char_class"]);
+        tempArr.push(elem["char_ancestry"]);
+        idArr.push(elem["char_id"]);
+        break;
+
+      case "creature":
+        tempArr.push(elem["creature_lvl"]);
+        tempArr.push(elem["creature_name"]);
+        tempArr.push(elem["creature_plane"]);
+        tempArr.push(elem["creature_url"]);
+        idArr.push(elem["creature_id"]);
+        break;
+    }
+    ArrOfArr.push(tempArr);
+  });
+  let outputArr = [ArrOfArr, idArr];
+  return outputArr;
 };
 // Function that changes the names and values of whatever I pass
 const changeUp = (locStr, newName, val, type) => {
@@ -377,15 +433,17 @@ const changeUp = (locStr, newName, val, type) => {
 };
 // Function that averages the party level
 const partyAvg = () => {
-  const charLvlCol = document.querySelector("#char-lvl").childNodes;
+  const charLvlCol = document.querySelector("#party-table-body").childNodes;
   let runningTotal = 0;
-  let rowNum = charLvlCol.length - 1;
+  let rowNum = charLvlCol.length - 3;
   let avg;
   charLvlCol.forEach((elem) => {
-    if (Object.is(elem.textContent * 1, NaN)) {
+    const firstTwoDig = parseInt(elem.textContent.slice(0, 2));
+
+    if (Object.is(firstTwoDig, NaN)) {
       return;
     } else {
-      runningTotal += parseInt(elem.textContent);
+      runningTotal += firstTwoDig;
     }
   });
   avg = Math.floor(runningTotal / rowNum);
@@ -394,7 +452,9 @@ const partyAvg = () => {
 // Function that makes an object of arrays of the monsters
 const levelOrganizer = () => {
   const avg = partyAvg()[0];
-  const creatureLvlCol = document.querySelector("#creature-lvl").childNodes;
+  const creatureLvlCol = document.querySelector(
+    "#creature-table-body"
+  ).childNodes;
   let creatureObj = {
     lowLackey: [10, []],
     lowModLackey: [15, []],
@@ -408,10 +468,11 @@ const levelOrganizer = () => {
     outtaRange: [],
   };
   creatureLvlCol.forEach((elem) => {
-    if (Object.is(elem.textContent * 1, NaN)) {
+    const firstTwoDig = parseInt(elem.textContent.slice(0, 2));
+    if (Object.is(firstTwoDig, NaN)) {
       return;
     } else {
-      switch (parseInt(elem.textContent)) {
+      switch (firstTwoDig) {
         case avg - 4:
           creatureObj.lowLackey[1].push(elem.classList[0]);
           break;
@@ -486,13 +547,12 @@ const generateEncounters = (party, bdgt, adj) => {
   }
   return encounter;
 };
-
-createPage();
-addSubmitBtnListener();
-addDelBtnListeners();
-addEditBtnListeners();
-addSwitchBtnListener();
-addRngsusBtnListener();
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-// CSS mumbo jumbo
-/////////////////////////////////////////////////////////////////////////////////////////////////////
+const generatePage = async () => {
+  await createPage();
+  addSubmitBtnListener();
+  addDelBtnListeners();
+  addEditBtnListeners();
+  addSwitchBtnListener();
+  addRngsusBtnListener();
+};
+generatePage();
