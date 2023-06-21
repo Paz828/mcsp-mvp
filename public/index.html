@@ -13,208 +13,230 @@
     />
   </head>
   <body>
+    <header><h2>Pathfinder 2nd Edition</h2></header>
     <div id="bg">
-      <div id="page">
-        <h1 class="title titles tilt">PF2 Encounter/Party Tracker</h1>
-        <h1 class="title2 titles">Add a</h1>
-        <h1 id="switch-h1" class="titles">Character</h1>
-        <br />
-        <div id="post-container">
-          <button id="switch" class="transparency">Add Creature</button>
-          <form id="post-form" action="https://encounter-gen.onrender.com/">
-            <div id="input-container">
+      <div id="book">
+        <div id="pg-1">
+          <div id="pg-1-title">
+            <h1 class="title titles tilt">Encounter & Party Tracker</h1>
+          </div>
+          <div id="the-usual-room">
+            <form id="usual-room" action="https://encounter-gen.onrender.com/">
+              <h2 id="usual-room-title" class="table-title">Character</h2>
+              <br />
               <input
-                id="col-1-input"
-                class="transparency"
+                type="text"
+                class="invis usual-room"
+                id="hidden-room"
+                name="char_id"
+              />
+              <div class="transparency">
+                <label id="lvl-lable" for="lvl-room">Level:</label>
+              </div>
+              <input
+                type="text"
+                id="lvl-room"
+                class="usual-room transparency"
                 name="char_lvl"
-                type="text"
-                value="Level"
-                style="text-align: center"
-              />
+              /><br />
+              <div class="transparency">
+                <label id="name-label" for="name-room">Name:</label>
+              </div>
               <input
-                id="col-2-input"
-                class="transparency"
+                type="text"
+                id="name-room"
+                class="usual-room transparency"
                 name="char_name"
-                type="text"
-                value="Character Name"
               />
+              <br />
+              <div class="transparency">
+                <label id="class-plane-label" for="class-plane-room"
+                  >Class:</label
+                >
+              </div>
               <input
-                id="col-3-input"
-                class="transparency"
+                type="text"
+                id="class-plane-room"
+                class="usual-room transparency"
                 name="char_class"
-                type="text"
-                value="Class"
-              />
+              /><br />
+              <div class="transparency">
+                <label id="ancestry-url-label" for="ancestry-url-room"
+                  >Ancestry:</label
+                >
+              </div>
               <input
-                id="col-4-input"
-                class="transparency"
-                name="char_ancestry"
                 type="text"
-                value="Ancestry"
-              />
+                id="ancestry-url-room"
+                class="usual-room transparency"
+                name="char_ancestry"
+              /><br />
               <button
-                id="post-btn"
-                class="transparency"
                 type="submit"
-                value="submit"
+                id="del-btn"
+                class="transparency"
+                name="usual_btn"
+                value="delete"
               >
-                Submit
+                Delete
+              </button>
+              <button
+                type="submit"
+                id="edit-btn"
+                class="transparency"
+                name="usual_btn"
+                value="edit"
+              >
+                Change
+              </button>
+              <div id="indicator" class="invis"></div>
+            </form>
+          </div>
+          <div id="rngsus-output">
+            <table id="rngsus-table" class="transparency" cellspacing="10">
+              <thead>
+                <tr>
+                  <th colspan="4" class="table-title">Encounter</th>
+                </tr>
+              </thead>
+              <tbody id="rngsus-table-body">
+                <tr>
+                  <td id="rngsus-lvl" class="tilt">Lvl</td>
+                  <td id="rngsus-name" class="tilt">Name</td>
+                  <td id="rngsus-plane" class="tilt">Plane</td>
+                  <td id="rngsus-url" class="tilt">URL</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div id="pg-2">
+          <div id="pg-2-title-container">
+            <div id="pg-2-title-1">
+              <h1 class="title2 titles">Add a</h1>
+            </div>
+            <div id="pg-2-title-2">
+              <h1 id="switch-h1" class="titles">Character</h1>
+            </div>
+          </div>
+          <div id="post-container">
+            <div>
+              <button id="switch" class="transparency">
+                Switch to Creature
               </button>
             </div>
-          </form>
-        </div>
-        <div id="the-usual-room">
-          <form id="usual-room" action="https://encounter-gen.onrender.com/">
-            <h2 id="usual-room-title" class="table-title">Character</h2>
-            <br />
-            <input
-              type="text"
-              class="invis usual-room"
-              id="hidden-room"
-              name="char_id"
-            />
-            <div class="transparency">
-              <label id="lvl-lable" for="lvl-room">Level:</label>
-            </div>
-            <input
-              type="text"
-              id="lvl-room"
-              class="usual-room transparency"
-              name="char_lvl"
-            /><br />
-            <div class="transparency">
-              <label id="name-label" for="name-room">Name:</label>
-            </div>
-            <input
-              type="text"
-              id="name-room"
-              class="usual-room transparency"
-              name="char_name"
-            />
-            <br />
-            <div class="transparency">
-              <label id="class-plane-label" for="class-plane-room"
-                >Class:</label
-              >
-            </div>
-            <input
-              type="text"
-              id="class-plane-room"
-              class="usual-room transparency"
-              name="char_class"
-            /><br />
-            <div class="transparency">
-              <label id="ancestry-url-label" for="ancestry-url-room"
-                >Ancestry:</label
-              >
-            </div>
-            <input
-              type="text"
-              id="ancestry-url-room"
-              class="usual-room transparency"
-              name="char_ancestry"
-            /><br />
-            <button
-              type="submit"
-              id="del-btn"
-              class="transparency"
-              name="usual_btn"
-              value="delete"
-            >
-              Delete
-            </button>
-            <button
-              type="submit"
-              id="edit-btn"
-              class="transparency"
-              name="usual_btn"
-              value="edit"
-            >
-              Change
-            </button>
-            <div id="indicator" class="invis"></div>
-          </form>
-        </div>
-        <div id="table-container">
-          <div id="party-container" class="transparency">
-            <table id="party-table" cellspacing="10">
-              <thead>
-                <tr>
-                  <th colspan="4" class="table-title">Party</th>
-                </tr>
-              </thead>
-              <tbody id="party-table-body">
-                <tr>
-                  <td id="char-lvl" class="tilt">Lvl</td>
-                  <td id="char-name" class="tilt">Name</td>
-                  <td id="char-class" class="tilt">Class</td>
-                  <td id="char-ancestry" class="tilt">Ancestry</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div id="creature-container">
-            <table id="creature-table" cellspacing="10">
-              <thead>
-                <tr>
-                  <th colspan="4" class="table-title">Creature</th>
-                </tr>
-              </thead>
-              <tbody id="creature-table-body">
-                <tr>
-                  <td id="creature-lvl" class="tilt">Lvl</td>
-                  <td id="creature-name" class="tilt">Name</td>
-                  <td id="creature-plane" class="tilt">Plane</td>
-                  <td id="creature-url" class="tilt">URL</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <br />
-        <div id="encounter-rngsus">
-          <form id="rngsus-form" action="#">
-            <div class="transparency">
-              <label id="rngsus-label" for="rngsus-input">Threat Level:</label>
-            </div>
-            <br />
             <div>
-              <select id="rngsus-input" class="transparency" name="threat">
-                <option value="select" class="transparency">
-                  Select Threat Level
-                </option>
-                <option value="trivial" class="transparency">Trivial</option>
-                <option value="low" class="transparency">Low</option>
-                <option value="moderate" class="transparency">Moderate</option>
-                <option value="severe" class="transparency">Severe</option>
-                <option value="extreme" class="transparency">Extreme</option>
-              </select>
+            <form id="post-form" action="https://encounter-gen.onrender.com/">
+              <div id="input-container">
+                <input
+                  id="col-1-input"
+                  class="transparency"
+                  name="char_lvl"
+                  type="text"
+                  value="Level"
+                  style="text-align: center"
+                />
+                <input
+                  id="col-2-input"
+                  class="transparency"
+                  name="char_name"
+                  type="text"
+                  value="Character Name"
+                />
+                <input
+                  id="col-3-input"
+                  class="transparency"
+                  name="char_class"
+                  type="text"
+                  value="Class"
+                />
+                <input
+                  id="col-4-input"
+                  class="transparency"
+                  name="char_ancestry"
+                  type="text"
+                  value="Ancestry"
+                />
+                <button
+                  id="post-btn"
+                  class="transparency"
+                  type="submit"
+                  value="submit"
+                >
+                  Submit
+                </button>
+              </div>
+              </div>
+            </form>
+          </div>
+          <div id="table-container">
+            <div id="party-container" class="transparency">
+              <table id="party-table" cellspacing="10">
+                <thead>
+                  <tr>
+                    <th colspan="4" class="table-title">Party</th>
+                  </tr>
+                </thead>
+                <tbody id="party-table-body">
+                  <tr>
+                    <td id="char-lvl" class="tilt">Lvl</td>
+                    <td id="char-name" class="tilt">Name</td>
+                    <td id="char-class" class="tilt">Class</td>
+                    <td id="char-ancestry" class="tilt">Ancestry</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-            <br />
-            <button type="submit" id="rngsus-btn" class="transparency">
-              submit
-            </button>
-          </form>
-        </div>
-        <div id="rngsus-output">
-          <table id="rngsus-table" class="transparency" cellspacing="10">
-            <thead>
-              <tr>
-                <th colspan="4" class="table-title">Encounter</th>
-              </tr>
-            </thead>
-            <tbody id="rngsus-table-body">
-              <tr>
-                <td id="rngsus-lvl" class="tilt">Lvl</td>
-                <td id="rngsus-name" class="tilt">Name</td>
-                <td id="rngsus-plane" class="tilt">Plane</td>
-                <td id="rngsus-url" class="tilt">URL</td>
-              </tr>
-            </tbody>
-          </table>
+            <div id="creature-container">
+              <table id="creature-table" cellspacing="10">
+                <thead>
+                  <tr>
+                    <th colspan="4" class="table-title">Creature</th>
+                  </tr>
+                </thead>
+                <tbody id="creature-table-body">
+                  <tr>
+                    <td id="creature-lvl" class="tilt">Lvl</td>
+                    <td id="creature-name" class="tilt">Name</td>
+                    <td id="creature-plane" class="tilt">Plane</td>
+                    <td id="creature-url" class="tilt">URL</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div id="encounter-div">
+            <div id="encounter-rngsus">
+              <div class="transparency">
+                <label id="rngsus-label" for="rngsus-input"
+                  >Threat Level:</label
+                >
+              </div>
+              <br />
+              <div>
+                <select id="rngsus-input" class="transparency" name="threat">
+                  <option value="select" class="transparency">
+                    Select Threat Level
+                  </option>
+                  <option value="trivial" class="transparency">Trivial</option>
+                  <option value="low" class="transparency">Low</option>
+                  <option value="moderate" class="transparency">
+                    Moderate
+                  </option>
+                  <option value="severe" class="transparency">Severe</option>
+                  <option value="extreme" class="transparency">Extreme</option>
+                </select>
+              </div>
+              <br />
+              <button id="rngsus-btn" class="transparency">Submit</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+    <footer style="color: whitesmoke">
+      <p>GM: Dorion Boesch | <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" style="color: whitesmoke;">Contact Me</a> </p>
+    </footer>
     <script src="main.js"></script>
   </body>
 </html>

@@ -96,7 +96,7 @@ const addSwitchBtnListener = async () => {
         changeUp("#col-3-input", "creature_plane", "Plane", "input");
         changeUp("#col-4-input", "creature_url", "URL", "input");
         changeUp("#switch-h1", undefined, "Creature", "label");
-        changeUp("#switch", undefined, "Add Character", "label");
+        changeUp("#switch", undefined, "Switch to Character", "label");
         break;
 
       case "creature_name":
@@ -105,7 +105,7 @@ const addSwitchBtnListener = async () => {
         changeUp("#col-3-input", "char_class", "Class", "input");
         changeUp("#col-4-input", "char_ancestry", "Ancestry", "input");
         changeUp("#switch-h1", undefined, "Character", "label");
-        changeUp("#switch", undefined, "Add Creature", "label");
+        changeUp("#switch", undefined, "Switch to Creature", "label");
         break;
     }
   });
@@ -113,12 +113,21 @@ const addSwitchBtnListener = async () => {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Encounter button handler
 const addRngsusBtnListener = () => {
-  const form = document.querySelector("#rngsus-form");
+  const rngBtn = document.querySelector("#rngsus-btn");
   let encounterList;
-  form.addEventListener("submit", async () => {
-    await createPage();
+  rngBtn.addEventListener("click", () => {
+    const rngsusTable = document.querySelector("#rngsus-table-body");
     const value = document.querySelector("#rngsus-input").value;
     const partySize = partyAvg()[1];
+
+    rngsusTable.innerHTML = `
+      <tr>
+        <td id="rngsus-lvl" class="tilt">Lvl</td>
+        <td id="rngsus-name" class="tilt">Name</td>
+        <td id="rngsus-plane" class="tilt">Plane</td>
+        <td id="rngsus-url" class="tilt">URL</td>
+      </tr>`;
+
     switch (value) {
       case "trivial":
         encounterList = generateEncounters(partySize, 40, 10);
@@ -144,11 +153,17 @@ const addRngsusBtnListener = () => {
         alert("Please select a threat level.");
     }
     let inputArr = [];
+    let a;
     encounterList.forEach((elem) => {
       let tempArr = [];
       const rowList = document.querySelector(`.${elem}`).childNodes;
       rowList.forEach((elem) => {
-        tempArr.push(elem.textContent);
+        if (elem.textContent === "See Page") {
+          a = elem.firstChild.href;
+          tempArr.push(a);
+        } else {
+          tempArr.push(elem.textContent);
+        }
       });
       inputArr.push(tempArr);
     });
@@ -158,7 +173,6 @@ const addRngsusBtnListener = () => {
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // Moving the selected entry to the edit/delete box
 const moveToUsualRoom = async (id, type) => {
-  console.log("moving");
   const usualRmArr = document.querySelectorAll(".usual-room");
   const h2 = document.querySelector("#usual-room-title");
   const inputIdArr = [
@@ -215,8 +229,8 @@ const moveToUsualRoom = async (id, type) => {
       }
       break;
   }
+
   try {
-    console.log(type);
     const response = await fetch(
       `https://encounter-gen.onrender.com/${type}/${id}`
     );
@@ -349,7 +363,6 @@ const makeRow = (colArr, locStr, idArr) => {
     td2.innerHTML = elem[1];
     td3.innerHTML = elem[2];
     if (idArr && /https/.test(elem[3])) {
-      console.log("creature");
       tr.classList.add(`creature-entry${id}`);
     }
 
@@ -365,8 +378,13 @@ const makeRow = (colArr, locStr, idArr) => {
       type = "party";
     }
     if (idArr) {
-      tr.addEventListener("click", () => {
-        moveToUsualRoom(id, type);
+      tr.addEventListener("click", (e) => {
+        const classList = e.target.parentNode.classList;
+        let usualId = classList[0].slice(classList[0].length - 2);
+        if (Object.is(parseInt(usualId), NaN)) {
+          usualId = parseInt(usualId.split("").reverse().join(""));
+        }
+        moveToUsualRoom(usualId, type);
       });
     }
     tr.append(td1, td2, td3, td4);
@@ -468,53 +486,57 @@ const levelOrganizer = () => {
     outtaRange: [],
   };
   creatureLvlCol.forEach((elem) => {
-    const firstTwoDig = parseInt(elem.textContent.slice(0, 2));
-    if (Object.is(firstTwoDig, NaN)) {
+    const td = elem.lastChild;
+
+    if (!td) {
       return;
-    } else {
-      switch (firstTwoDig) {
-        case avg - 4:
-          creatureObj.lowLackey[1].push(elem.classList[0]);
-          break;
+    } else if (!td.firstChild) {
+      return;
+    }
 
-        case avg - 3:
-          creatureObj.lowModLackey[1].push(elem.classList[0]);
-          break;
+    const firstTwoDig = parseInt(elem.textContent.slice(0, 2));
+    switch (firstTwoDig) {
+      case avg - 4:
+        creatureObj.lowLackey[1].push(elem.classList[0]);
+        break;
 
-        case avg - 2:
-          creatureObj.lackeyCreature[1].push(elem.classList[0]);
+      case avg - 3:
+        creatureObj.lowModLackey[1].push(elem.classList[0]);
+        break;
 
-          break;
+      case avg - 2:
+        creatureObj.lackeyCreature[1].push(elem.classList[0]);
 
-        case avg - 1:
-          creatureObj.stanCreature[1].push(elem.classList[0]);
+        break;
 
-          break;
+      case avg - 1:
+        creatureObj.stanCreature[1].push(elem.classList[0]);
 
-        case avg:
-          creatureObj.creatureLowBoss[1].push(elem.classList[0]);
+        break;
 
-          break;
+      case avg:
+        creatureObj.creatureLowBoss[1].push(elem.classList[0]);
 
-        case avg + 1:
-          creatureObj.lowModBoss[1].push(elem.classList[0]);
-          break;
+        break;
 
-        case avg + 2:
-          creatureObj.modSevBoss[1].push(elem.classList[0]);
-          break;
+      case avg + 1:
+        creatureObj.lowModBoss[1].push(elem.classList[0]);
+        break;
 
-        case avg + 3:
-          creatureObj.sevExBoss[1].push(elem.classList[0]);
-          break;
+      case avg + 2:
+        creatureObj.modSevBoss[1].push(elem.classList[0]);
+        break;
 
-        case avg + 4:
-          creatureObj.exBoss[1].push(elem.classList[0]);
-          break;
+      case avg + 3:
+        creatureObj.sevExBoss[1].push(elem.classList[0]);
+        break;
 
-        default:
-          creatureObj.outtaRange.push(elem.classList[0]);
-      }
+      case avg + 4:
+        creatureObj.exBoss[1].push(elem.classList[0]);
+        break;
+
+      default:
+        creatureObj.outtaRange.push(elem.classList[0]);
     }
   });
   return creatureObj;
